@@ -1,0 +1,38 @@
+# languages
+4ops.terraform
+dbaeumer.vscode-eslint
+efanzh.graphviz-preview
+elliotlarson.ruby-around-the-block
+golang.go
+jakebecker.elixir-ls
+kumar-harsh.graphql-for-vscode
+lunaryorn.fish-ide
+msaraiva.surface
+ms-python.python
+ms-toolsai.jupyter
+nwolverson.language-purescript
+rebornix.ruby
+rust-lang.rust
+sbrink.elm
+skyapps.fish-vscode
+stephanvs.dot
+
+# themes
+azemoh.one-monokai
+robbowen.synthwave-vscode
+wesbos.theme-cobalt2
+
+# general tools
+bungcip.better-toml
+eamodio.gitlens
+esbenp.prettier-vscode
+gruntfuggly.todo-tree
+mrmlnc.vscode-duplicate
+ms-azuretools.vscode-docker
+ms-vsliveshare.vsliveshare
+ms-vsliveshare.vsliveshare-audio
+ms-vsliveshare.vsliveshare-pack
+pnp.polacode
+reduckted.vscode-gitweblinks
+vadimcn.vscode-lldb
+vscodevim.vim

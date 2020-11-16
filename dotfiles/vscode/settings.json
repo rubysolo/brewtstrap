@@ -1,0 +1,26 @@
+{
+    "breadcrumbs.enabled": true,
+    "debug.allowBreakpointsEverywhere": true,
+    "diffEditor.renderSideBySide": true,
+    "editor.fontFamily": "Envy Code R",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 14,
+    "editor.lineHeight": 20,
+    "editor.tabSize": 2,
+    "files.associations": {
+        "Dockerfile*": "dockerfile"
+    },
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    "git.autofetch": true,
+    "html.format.endWithNewline": true,
+    "javascript.updateImportsOnFileMove.enabled": "never",
+    "terminal.integrated.fontFamily":"EnvyCodeRNerdFontComplete-",
+    "terminal.integrated.fontSize": 14,
+    "todo-tree.tree.showScanModeButton": false,
+    "vim.textwidth": 117,
+    "window.zoomLevel": 0,
+    "workbench.colorTheme": "SynthWave '84",
+    "workbench.tree.renderIndentGuides": "none"
+}

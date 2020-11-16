@@ -1,0 +1,125 @@
+[alias]
+  aa = add --all
+  ap = add --patch
+  au = add -u
+  br = branch
+  check-whitespace = "diff-tree --check $(git hash-object -t tree /dev/null) HEAD"
+  ci = commit -v
+  co = checkout
+  cp = cherry-pick
+  ctags = !.git/hooks/ctags
+  df = diff
+  l = log --pretty=basic
+  la = log --pretty=author
+  lg = log -p
+  lol = log --graph --pretty=format:'%C(red)%h%C(reset) %C(yellow)%d%C(reset)%s %C(green)%an %C(bold black)%cr%C(reset)' --abbrev-commit --date=relative
+  lt = log --pretty=time
+  lta = log --pretty=timeauthor
+  oops = reset --soft "HEAD^"
+  paid = log --pretty=format:"%ai:%an:%d:%h:%B" --reverse --all --since=2.months.ago --author=Solomon
+  st = status
+  standup = shortlog --since=yesterday
+  unstage = reset HEAD
+  w = whatchanged
+  x = !gitx
+
+[branch]
+  autosetuprebase = always
+
+[color]
+  branch = auto
+  diff = auto
+  interactive = auto
+  pager = true
+  status = auto
+  ui = true
+
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+
+[color "diff"]
+  frag = magenta bold
+  meta = yellow bold
+  new = green bold
+  old = red bold
+
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+
+[core]
+  excludesfile = ~/.gitignore
+  pager = less -FRSX
+  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+  editor = vim
+
+[credential]
+  helper = osxkeychain
+
+[diff]
+  noprefix = true
+  tool = vimdiff
+
+[diff "rspec"]
+  xfuncname = "^[ \t]*((RSpec|describe|context|it)[ \t].*)$"
+
+[diff "ruby"]
+  funcname = "^[ \t]*((class|module|def)[ \t].*)$"
+
+[fetch]
+  prune = true
+
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  process = git-lfs filter-process
+  required = true
+  smudge = git-lfs smudge -- %f
+
+[github]
+  user = rubysolo
+
+[include]
+  path = ~/.gitconfig.local
+
+[init]
+  defaultBranch = main
+
+[merge]
+  ff = only
+  tool = vimdiff
+
+[mergetool "vimdiff"]
+  cmd = vimdiff -f $LOCAL $MERGED $REMOTE
+
+[mergetool]
+  trustExitCode = false
+
+[pretty]
+  basic = format:%C(red)%h%C(reset) %s%C(reset)
+  time = format:%C(red)%h%C(reset) %C(blue)%cs%C(reset) %s%C(reset)
+  author = format:%C(red)%h%C(reset) %s %C(green)%an%C(reset)
+  timeauthor = format:%C(red)%h%C(reset) %C(blue)%cs%C(reset) %s %C(green)%an%C(reset)
+
+[pull]
+  ff = only
+  rebase = true
+
+[push]
+  default = current
+
+[rebase]
+  autosquash = true
+  autostash = true
+
+[rerere]
+  autoupdate = true
+  enabled = true
+
+[url "https://github.com/"]
+  insteadOf = "gh:"
+
+[user]
+  name = Solomon White
