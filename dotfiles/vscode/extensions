@@ -3,6 +3,7 @@
 dbaeumer.vscode-eslint
 efanzh.graphviz-preview
 elliotlarson.ruby-around-the-block
+elmtooling.elm-ls-vscode
 golang.go
 jakebecker.elixir-ls
 kumar-harsh.graphql-for-vscode
@@ -13,7 +14,6 @@ ms-toolsai.jupyter
 nwolverson.language-purescript
 rebornix.ruby
 rust-lang.rust
-sbrink.elm
 skyapps.fish-vscode
 stephanvs.dot
 
