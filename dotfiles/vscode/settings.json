@@ -22,5 +22,11 @@
     "vim.textwidth": 117,
     "window.zoomLevel": 0,
     "workbench.colorTheme": "SynthWave '84",
-    "workbench.tree.renderIndentGuides": "none"
+    "workbench.tree.renderIndentGuides": "none",
+    "[elm]": {
+        "editor.tabSize": 4
+    },
+    "[python]": {
+        "editor.tabSize": 4
+    }
 }

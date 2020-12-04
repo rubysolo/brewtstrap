@@ -1,0 +1,4 @@
+# set $HOME to pick up this gitconfig if hooks are ruining your day
+
+[core]
+  hookspath = /dev/null

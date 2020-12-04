@@ -17,6 +17,7 @@
   lta = log --pretty=timeauthor
   oops = reset --soft "HEAD^"
   paid = log --pretty=format:"%ai:%an:%d:%h:%B" --reverse --all --since=2.months.ago --author=Solomon
+  s = status -s
   st = status
   standup = shortlog --since=yesterday
   unstage = reset HEAD
@@ -51,10 +52,13 @@
   untracked = cyan
 
 [core]
+  editor = vim
   excludesfile = ~/.gitignore
   pager = less -FRSX
-  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
-  editor = vim
+  # Make `git rebase` safer on macOS.
+  # More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
+  trustctime = false
+  whitespace = -indent-with-non-tab,cr-at-eol,fix,space-before-tab,trailing-space
 
 [credential]
   helper = osxkeychain
@@ -62,6 +66,9 @@
 [diff]
   noprefix = true
   tool = vimdiff
+
+[diff "bin"]
+  textconv = hexdump -v -C
 
 [diff "rspec"]
   xfuncname = "^[ \t]*((RSpec|describe|context|it)[ \t].*)$"
@@ -89,6 +96,7 @@
 
 [merge]
   ff = only
+  log = true
   tool = vimdiff
 
 [mergetool "vimdiff"]

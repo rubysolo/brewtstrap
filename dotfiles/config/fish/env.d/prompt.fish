@@ -141,9 +141,9 @@ end
 
 
 function prompt_venv -d "display active python virtual env"
-    if set -q VIRTUAL_ENV
-        prompt_segment blue white "("(basename "$VIRTUAL_ENV")")"
-    end
+  if set -q VIRTUAL_ENV
+    prompt_segment blue white "("(basename "$VIRTUAL_ENV")")"
+  end
 end
 
 # ===========================
