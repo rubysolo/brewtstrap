@@ -53,6 +53,9 @@ brew bundle -v --no-lock --file=- <<EOF
   brew "gh"
   brew "git"
   brew "git-lfs"
+  brew "glew"
+  brew "glfw3"
+  brew "goreleaser"
   brew "gpg"
   brew "jq"
   brew "k9s"
@@ -61,6 +64,7 @@ brew bundle -v --no-lock --file=- <<EOF
   brew "mas"
   brew "ocrmypdf"
   brew "openssl"
+  brew "pkg-config"
   brew "postgresql"
   brew "protobuf"
   brew "pgformatter"
@@ -96,7 +100,7 @@ brew bundle -v --no-lock --file=- <<EOF
   cask "the-unarchiver"
   cask "tunnelblick"
   cask "visual-studio-code"
-  cask "zoomus"
+  cask "zoom"
 EOF
 
 brew cask install font-envy-code-r-for-powerline.rb

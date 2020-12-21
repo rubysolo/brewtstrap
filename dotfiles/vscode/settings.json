@@ -28,5 +28,11 @@
     },
     "[python]": {
         "editor.tabSize": 4
-    }
+    },
+    "workbench.editorAssociations": [
+        {
+            "viewType": "jupyter.notebook.ipynb",
+            "filenamePattern": "*.ipynb"
+        }
+    ]
 }
