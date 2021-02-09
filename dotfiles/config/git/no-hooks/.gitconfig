@@ -2,3 +2,7 @@
 
 [core]
   hookspath = /dev/null
+
+[user]
+  name = Solomon White
+  email = solomon@blinker.com

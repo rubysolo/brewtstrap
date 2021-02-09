@@ -1,4 +1,10 @@
 {
+    "alignment.surroundSpace": {
+        "colon":      [-1, 1],
+        "assignment": [1, 1],
+        "arrow":      [1, 1],
+        "comment":    2
+    },
     "breadcrumbs.enabled": true,
     "debug.allowBreakpointsEverywhere": true,
     "diffEditor.renderSideBySide": true,
@@ -8,7 +14,8 @@
     "editor.lineHeight": 20,
     "editor.tabSize": 2,
     "files.associations": {
-        "Dockerfile*": "dockerfile"
+        "Dockerfile*": "dockerfile",
+        "*.axlsx": "ruby"
     },
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
