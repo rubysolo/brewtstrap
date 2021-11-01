@@ -1,5 +1,6 @@
 # languages
 4ops.terraform
+bradymholt.pgformatter
 dbaeumer.vscode-eslint
 efanzh.graphviz-preview
 elliotlarson.ruby-around-the-block
@@ -28,6 +29,7 @@ bungcip.better-toml
 eamodio.gitlens
 esbenp.prettier-vscode
 gruntfuggly.todo-tree
+hediet.vscode-drawio
 mrmlnc.vscode-duplicate
 ms-azuretools.vscode-docker
 ms-vsliveshare.vsliveshare

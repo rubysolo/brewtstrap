@@ -8,11 +8,17 @@
     "breadcrumbs.enabled": true,
     "debug.allowBreakpointsEverywhere": true,
     "diffEditor.renderSideBySide": true,
+    "editor.codeLens": false,
+    "editor.cursorStyle": "line",
     "editor.fontFamily": "Envy Code R",
     "editor.fontLigatures": true,
     "editor.fontSize": 14,
+    "editor.insertSpaces": true,
     "editor.lineHeight": 20,
+    "editor.lineNumbers": "on",
     "editor.tabSize": 2,
+    "editor.wordSeparators": "/\\()\"':,.;<>~!@#$%^&*|+=[]{}`?-",
+    "editor.wordWrap": "off",
     "files.associations": {
         "Dockerfile*": "dockerfile",
         "*.axlsx": "ruby"
@@ -25,21 +31,33 @@
     "javascript.updateImportsOnFileMove.enabled": "never",
     "terminal.integrated.fontFamily":"EnvyCodeRNerdFontComplete-",
     "terminal.integrated.fontSize": 14,
-    "todo-tree.tree.showScanModeButton": false,
+    "todo-tree.general.tags": [
+        "BUG",
+        "HACK",
+        "FIXME",
+        "TODO",
+        "XXX",
+        "[ ]",
+        "[x]"
+    ],
+    "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
     "vim.textwidth": 117,
-    "window.zoomLevel": 0,
-    "workbench.colorTheme": "SynthWave '84",
+    "workbench.colorTheme": "Tomorrow Night Blue",
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter.notebook.ipynb"
+    },
     "workbench.tree.renderIndentGuides": "none",
     "[elm]": {
+        "editor.tabSize": 4
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.tabSize": 4
     },
     "[python]": {
         "editor.tabSize": 4
     },
-    "workbench.editorAssociations": [
-        {
-            "viewType": "jupyter.notebook.ipynb",
-            "filenamePattern": "*.ipynb"
-        }
-    ]
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }

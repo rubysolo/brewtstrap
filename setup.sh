@@ -64,7 +64,9 @@ brew bundle -v --no-lock --file=- <<EOF
   brew "lsd"
   brew "mas"
   brew "miller"
+  brew "mkcert"
   brew "ocrmypdf"
+  brew "openconnect"
   brew "openssl"
   brew "pkg-config"
   brew "postgresql"
@@ -107,7 +109,7 @@ brew bundle -v --no-lock --file=- <<EOF
   cask "zoom"
 EOF
 
-brew cask install font-envy-code-r-for-powerline.rb
+brew install ./font-envy-code-r-for-powerline.rb
 
 brew upgrade
 brew cleanup

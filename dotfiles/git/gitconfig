@@ -131,3 +131,6 @@
 
 [user]
   name = Solomon White
+
+[includeIf "gitdir:~/Projects/blinker/"]
+  path = ~/Projects/blinker/.gitconfig
