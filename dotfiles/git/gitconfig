@@ -131,6 +131,7 @@
 
 [user]
   name = Solomon White
+  email = rubysolo@gmail.com
 
 [includeIf "gitdir:~/Projects/blinker/"]
   path = ~/Projects/blinker/.gitconfig
