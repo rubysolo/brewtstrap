@@ -1,63 +1,80 @@
 {
-    "alignment.surroundSpace": {
-        "colon":      [-1, 1],
-        "assignment": [1, 1],
-        "arrow":      [1, 1],
-        "comment":    2
-    },
-    "breadcrumbs.enabled": true,
-    "debug.allowBreakpointsEverywhere": true,
-    "diffEditor.renderSideBySide": true,
-    "editor.codeLens": false,
-    "editor.cursorStyle": "line",
-    "editor.fontFamily": "Envy Code R",
-    "editor.fontLigatures": true,
-    "editor.fontSize": 14,
-    "editor.insertSpaces": true,
-    "editor.lineHeight": 20,
-    "editor.lineNumbers": "on",
-    "editor.tabSize": 2,
-    "editor.wordSeparators": "/\\()\"':,.;<>~!@#$%^&*|+=[]{}`?-",
-    "editor.wordWrap": "off",
-    "files.associations": {
-        "Dockerfile*": "dockerfile",
-        "*.axlsx": "ruby"
-    },
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "files.trimTrailingWhitespace": true,
-    "git.autofetch": true,
-    "html.format.endWithNewline": true,
-    "javascript.updateImportsOnFileMove.enabled": "never",
-    "terminal.integrated.fontFamily":"EnvyCodeRNerdFontComplete-",
-    "terminal.integrated.fontSize": 14,
-    "todo-tree.general.tags": [
-        "BUG",
-        "HACK",
-        "FIXME",
-        "TODO",
-        "XXX",
-        "[ ]",
-        "[x]"
+  "[elm]": {
+    "editor.tabSize": 4
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 4
+  },
+  "[python]": {
+    "editor.tabSize": 4
+  },
+  "alignment.surroundSpace": {
+    "arrow": [
+      1,
+      1
     ],
-    "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
-    "vim.textwidth": 117,
-    "workbench.colorTheme": "Tomorrow Night Blue",
-    "workbench.editorAssociations": {
-        "*.ipynb": "jupyter.notebook.ipynb"
-    },
-    "workbench.tree.renderIndentGuides": "none",
-    "[elm]": {
-        "editor.tabSize": 4
-    },
-    "[json]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.tabSize": 4
-    },
-    "[python]": {
-        "editor.tabSize": 4
-    },
-    "[html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+    "assignment": [
+      1,
+      1
+    ],
+    "colon": [
+      -1,
+      1
+    ],
+    "comment": 2
+  },
+  "breadcrumbs.enabled": true,
+  "cursorless.hatEnablement.shapes": {
+    "bolt": true,
+    "curve": true
+  },
+  "debug.allowBreakpointsEverywhere": true,
+  "diffEditor.renderSideBySide": true,
+  "editor.accessibilitySupport": "off",
+  "editor.codeLens": false,
+  "editor.cursorStyle": "line",
+  "editor.fontFamily": "Envy Code R",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14,
+  "editor.insertSpaces": true,
+  "editor.lineHeight": 20,
+  "editor.lineNumbers": "on",
+  "editor.tabSize": 2,
+  "editor.wordSeparators": "/\\()\"':,.;<>~!@#$%^&*|+=[]{}`?-",
+  "editor.wordWrap": "off",
+  "files.associations": {
+    "*.axlsx": "ruby",
+    "Dockerfile*": "dockerfile"
+  },
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "git.autofetch": true,
+  "html.format.endWithNewline": true,
+  "javascript.updateImportsOnFileMove.enabled": "never",
+  "terminal.integrated.env.osx": {
+    "FIG_NEW_SESSION": "1"
+  },
+  "terminal.integrated.fontFamily": "EnvyCodeRNerdFontComplete-",
+  "terminal.integrated.fontSize": 14,
+  "todo-tree.general.tags": [
+    "BUG",
+    "HACK",
+    "FIXME",
+    "TODO",
+    "XXX",
+    "[ ]",
+    "[x]"
+  ],
+  "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
+  "vim.textwidth": 117,
+  "workbench.colorTheme": "Cobalt2",
+  "workbench.editorAssociations": {
+    "*.ipynb": "jupyter.notebook.ipynb"
+  },
+  "workbench.tree.renderIndentGuides": "none"
 }

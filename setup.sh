@@ -88,6 +88,7 @@ brew bundle -v --no-lock --file=- <<EOF
   cask "alfred"
   cask "boop"
   cask "cheatsheet"
+  cask "clipy"
   cask "dash"
   cask "discord"
   cask "docker"
@@ -183,7 +184,6 @@ esac
 
   defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
 )
-
 
 #------------------------------------------------------------------------------
 # Languages
