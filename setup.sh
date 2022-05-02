@@ -98,6 +98,7 @@ brew bundle -v --no-lock --file=- <<EOF
   cask "font-consolas-for-powerline"
   cask "font-envy-code-r"
   cask "font-inconsolata"
+  cask "gitup"
   cask "google-chrome"
   cask "iterm2"
   cask "maccy"
