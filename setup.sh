@@ -15,7 +15,7 @@ set -eux
 
 #------------------------------------------------------------------------------
 # Homebrew and packages
-HOMEBREW_PREFIX="/usr/local"
+HOMEBREW_PREFIX="/opt/homebrew"
 
 if [ -d "$HOMEBREW_PREFIX" ]; then
   if ! [ -r "$HOMEBREW_PREFIX" ]; then
@@ -29,7 +29,7 @@ fi
 
 if ! command -v brew >/dev/null; then
   curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
-  export PATH="/usr/local/bin:$PATH"
+  export PATH="$HOMEBREW_PREFIX/bin:$PATH"
 fi
 
 brew analytics off
@@ -72,6 +72,7 @@ brew bundle -v --no-lock --file=- <<EOF
   brew "postgresql"
   brew "protobuf"
   brew "pgformatter"
+  brew "shared-mime-info"
   brew "shellcheck"
   brew "the_silver_searcher"
   brew "tfenv"
@@ -82,6 +83,7 @@ brew bundle -v --no-lock --file=- <<EOF
   brew "vim"
   brew "watch"
   brew "watchman"
+  brew "zlib"
 
   cask "1password"
   cask "1password-cli"
@@ -99,7 +101,7 @@ brew bundle -v --no-lock --file=- <<EOF
   cask "font-envy-code-r"
   cask "font-inconsolata"
   cask "gitup"
-  cask "google-chrome"
+  # cask "google-chrome"
   cask "iterm2"
   cask "maccy"
   cask "ngrok"
@@ -111,7 +113,7 @@ brew bundle -v --no-lock --file=- <<EOF
   cask "zoom"
 EOF
 
-brew install ./font-envy-code-r-for-powerline.rb
+brew install ./font-envy-code-r-nerd-font.rb
 
 brew upgrade
 brew cleanup
