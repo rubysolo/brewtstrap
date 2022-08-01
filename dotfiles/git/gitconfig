@@ -16,7 +16,7 @@
   lt = log --pretty=time
   lta = log --pretty=timeauthor
   oops = reset --soft "HEAD^"
-  paid = log --pretty=format:"%ai:%an:%d:%h:%B" --reverse --all --since=2.months.ago --author=Solomon
+  paid = log --pretty=format:"%ai:%an:%d:%h:%B" --reverse --all --since=3.months.ago --author=Solomon
   s = status -s
   st = status
   standup = shortlog --since=yesterday
@@ -117,6 +117,7 @@
 
 [push]
   default = current
+  autoSetupRemote = true
 
 [rebase]
   autosquash = true

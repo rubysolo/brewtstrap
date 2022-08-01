@@ -1,5 +1,7 @@
+bazel 3.7.2
 elixir 1.13.4-otp-25
 elm 0.19.1
+flutter 2.5.3-stable
 gleam 0.21.0
 golang 1.18.2
 nodejs 18.2.0
@@ -7,8 +9,6 @@ purescript 0.15.3-4
 python 3.10.4
 ruby 3.1.2
 rust 1.61.0
-yarn 1.22.19
 tilt 0.22.15
-bazel 3.7.2
-flutter 2.5.3-stable
+yarn 1.22.19
 zig 0.8.1

@@ -76,5 +76,7 @@
   "workbench.editorAssociations": {
     "*.ipynb": "jupyter.notebook.ipynb"
   },
-  "workbench.tree.renderIndentGuides": "none"
+  "workbench.tree.renderIndentGuides": "none",
+  "erlang.rebarPath": "/Users/solo/.asdf/installs/elixir/1.13.4-otp-25/.mix",
+  "erlang.erlangPath": "/Users/solo/.asdf/installs/elixir/1.13.4-otp-25/bin"
 }
