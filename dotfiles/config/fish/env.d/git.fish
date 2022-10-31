@@ -24,5 +24,7 @@ function grpo
   git remote prune origin
 end
 
+eval (hub alias -s)
+
 # git config to bypass hooks
 alias nhgit='env HOME=$HOME/.config/git/no-hooks git'

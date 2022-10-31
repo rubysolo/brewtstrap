@@ -42,7 +42,6 @@ brew bundle -v --no-lock --file=- <<EOF
   brew "ack"
   brew "asdf"
   brew "awscli"
-  brew "chromedriver"
   brew "coreutils"
   brew "csvkit"
   brew "curl"
@@ -62,8 +61,11 @@ brew bundle -v --no-lock --file=- <<EOF
   brew "goreleaser"
   brew "gpg"
   brew "graphviz"
+  brew "helix"
+  brew "hub"
   brew "jq"
   brew "k9s"
+  brew "kubectl"
   brew "libyaml"
   brew "lsd"
   brew "mas"
@@ -85,8 +87,8 @@ brew bundle -v --no-lock --file=- <<EOF
   brew "tflint"
   brew "tldr"
   brew "tmux"
+  brew "tor"
   brew "tree"
-  brew "vlc"
   brew "vim"
   brew "watch"
   brew "watchman"
@@ -98,6 +100,7 @@ brew bundle -v --no-lock --file=- <<EOF
   cask "alfred"
   cask "boop"
   cask "cheatsheet"
+  cask "chromedriver"
   cask "clipy"
   cask "dash"
   cask "discord"
@@ -118,10 +121,11 @@ brew bundle -v --no-lock --file=- <<EOF
   cask "the-unarchiver"
   cask "tunnelblick"
   cask "visual-studio-code"
+  cask "vlc"
   cask "zoom"
 EOF
 
-brew install ./font-envy-code-r-nerd-font.rb
+brew install --cask ./font-envy-code-r-nerd-font.rb
 
 brew upgrade
 brew cleanup

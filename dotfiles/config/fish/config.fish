@@ -10,3 +10,8 @@ for f in $HOME/.config/fish/env.d/*.fish;
     source $f
   end
 end
+
+# pnpm
+set -gx PNPM_HOME "/Users/solo/Library/pnpm"
+set -gx PATH "$PNPM_HOME" $PATH
+# pnpm end

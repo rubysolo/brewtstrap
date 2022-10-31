@@ -618,7 +618,7 @@ sudo mdutil -i on / > /dev/null
 sudo mdutil -E / > /dev/null
 
 ###############################################################################
-# Terminal & iTerm 2                                                          #
+# Terminal                                                                    #
 ###############################################################################
 
 # Only use UTF-8 in Terminal.app
@@ -683,11 +683,15 @@ sudo mdutil -E / > /dev/null
 # Disable the annoying line marks
 # defaults write com.apple.Terminal ShowLineMarks -int 0
 
+###############################################################################
+# iTerm 2                                                                     #
+###############################################################################
+
 # Install the Solarized Dark theme for iTerm
 # open "${HOME}/init/Solarized Dark.itermcolors"
 
 # Don’t display the annoying prompt when quitting iTerm
-# defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
 ###############################################################################
 # Time Machine                                                                #
@@ -698,6 +702,9 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 # Disable local Time Machine backups
 # hash tmutil &> /dev/null && sudo tmutil disablelocal
+
+# Don't back up docker images
+tmutil addexclusion ~/Library/Containers/com.docker.docker/
 
 ###############################################################################
 # Activity Monitor                                                            #

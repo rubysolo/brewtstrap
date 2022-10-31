@@ -37,9 +37,8 @@
   "editor.accessibilitySupport": "off",
   "editor.codeLens": false,
   "editor.cursorStyle": "line",
-  "editor.fontFamily": "Envy Code R",
+  "editor.fontFamily": "'Operator Mono', Menlo, Monaco, 'Courier New', monospace",
   "editor.fontLigatures": true,
-  "editor.fontSize": 14,
   "editor.insertSpaces": true,
   "editor.lineHeight": 20,
   "editor.lineNumbers": "on",
@@ -72,11 +71,11 @@
   ],
   "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
   "vim.textwidth": 117,
-  "workbench.colorTheme": "Cobalt2",
   "workbench.editorAssociations": {
     "*.ipynb": "jupyter.notebook.ipynb"
   },
   "workbench.tree.renderIndentGuides": "none",
   "erlang.rebarPath": "/Users/solo/.asdf/installs/elixir/1.13.4-otp-25/.mix",
-  "erlang.erlangPath": "/Users/solo/.asdf/installs/elixir/1.13.4-otp-25/bin"
+  "erlang.erlangPath": "/Users/solo/.asdf/installs/elixir/1.13.4-otp-25/bin",
+  "workbench.colorTheme": "Cobalt2"
 }
