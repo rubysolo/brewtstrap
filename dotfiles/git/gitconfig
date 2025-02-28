@@ -4,11 +4,13 @@
   au = add -u
   br = branch
   check-whitespace = "diff-tree --check $(git hash-object -t tree /dev/null) HEAD"
-  ci = commit -v
+  ca = commit -a
+  ci = commit
   co = checkout
   cp = cherry-pick
   ctags = !.git/hooks/ctags
   df = diff
+  fixup = "!git log -n 50 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
   l = log --pretty=basic
   la = log --pretty=author
   lg = log -p
@@ -16,7 +18,7 @@
   lt = log --pretty=time
   lta = log --pretty=timeauthor
   oops = reset --soft "HEAD^"
-  paid = log --pretty=format:"%ai:%an:%d:%h:%B" --reverse --all --since=3.months.ago --author=Solomon
+  paid = log --pretty=format:"%ai:%an:%d:%h:%B" --reverse --all --since=4.months.ago --author=Solomon
   s = status -s
   st = status
   standup = shortlog --since=yesterday
@@ -26,6 +28,7 @@
 
 [branch]
   autosetuprebase = always
+  sort = -committerdate
 
 [color]
   branch = auto
@@ -51,33 +54,57 @@
   changed = green
   untracked = cyan
 
+[column]
+  ui = auto
+
+[commit]
+  verbose = true
+
 [core]
+  attributesfile = /Users/solo/.gitattributes
   editor = vim
   excludesfile = ~/.gitignore
-  pager = less -FRSX
+  # fsmonitor = true
+  # pager = less -FRSX
+  pager = delta
   # Make `git rebase` safer on macOS.
   # More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
   trustctime = false
+  # untrackedCache = true
   whitespace = -indent-with-non-tab,cr-at-eol,fix,space-before-tab,trailing-space
 
 [credential]
-  helper = osxkeychain
+    helper = osxkeychain
+
+
+[delta]
+  hyperlinks = true
+  line-numbers = true
+  side-by-side = true
+  navigate = true    # use n and N to move between diff sections
+  light = false
 
 [diff]
-  noprefix = true
-  tool = vimdiff
+  algorithm = histogram
+  colorMoved = plain
+  mnemonicPrefix = true
+  # noprefix = true
+  renames = true
+  # tool = vimdiff
 
 [diff "bin"]
   textconv = hexdump -v -C
 
 [diff "rspec"]
-  xfuncname = "^[ \t]*((RSpec|describe|context|it)[ \t].*)$"
+  xfuncname = "^[ \t]*((RSpec|describe|context|it|before|after|around|feature|scenario|background)[ \t].*)$"
 
 [diff "ruby"]
   funcname = "^[ \t]*((class|module|def)[ \t].*)$"
 
 [fetch]
+  all = true
   prune = true
+  pruneTags = true
 
 [filter "lfs"]
   clean = git-lfs clean -- %f
@@ -88,16 +115,26 @@
 [github]
   user = rubysolo
 
+[help]
+  autocorrect = prompt
+
 [include]
   path = ~/.gitconfig.local
+
+[includeIf "gitdir:~/Projects/blinker/"]
+  path = ~/Projects/blinker/.gitconfig
 
 [init]
   defaultBranch = main
 
+[interactive]
+  diffFilter = delta --color-only
+
 [merge]
+  # conflictstyle = zdiff3
   ff = only
   log = true
-  tool = vimdiff
+  # tool = vimdiff
 
 [mergetool "vimdiff"]
   cmd = vimdiff -f $LOCAL $MERGED $REMOTE
@@ -106,9 +143,9 @@
   trustExitCode = false
 
 [pretty]
+  author = format:%C(red)%h%C(reset) %s %C(green)%an%C(reset)
   basic = format:%C(red)%h%C(reset) %s%C(reset)
   time = format:%C(red)%h%C(reset) %C(blue)%cs%C(reset) %s%C(reset)
-  author = format:%C(red)%h%C(reset) %s %C(green)%an%C(reset)
   timeauthor = format:%C(red)%h%C(reset) %C(blue)%cs%C(reset) %s %C(green)%an%C(reset)
 
 [pull]
@@ -116,16 +153,21 @@
   rebase = true
 
 [push]
-  default = current
   autoSetupRemote = true
+  default = simple
+  followTags = true
 
 [rebase]
-  autosquash = true
-  autostash = true
+  autoSquash = true
+  autoStash = true
+  updateRefs = true
 
 [rerere]
   autoupdate = true
   enabled = true
+
+[tag]
+  sort = version:refname
 
 [url "https://github.com/"]
   insteadOf = "gh:"
