@@ -13,6 +13,7 @@ source "$ROOT_DIR/lib/macos.sh"
 source "$ROOT_DIR/lib/shell.sh"
 source "$ROOT_DIR/lib/links.sh"
 source "$ROOT_DIR/lib/vscode.sh"
+source "$ROOT_DIR/lib/interactive.sh"
 
 # Default to interactive mode
 AUTO_INSTALL=false
@@ -43,65 +44,76 @@ else
   echo ""
 fi
 
+  # Present all choices up-front and collect selections into SELECTED_MODULES
+  choose_tasks
+
+  # Helper for checking selections
+  selected() {
+    for v in "${SELECTED_MODULES[@]:-}"; do
+      [ "$v" = "$1" ] && return 0
+    done
+    return 1
+  }
+
 # 1. Homebrew Core
-if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$BREW  Install Homebrew and Core CLI tools?"; then
+if selected homebrew; then
   install_homebrew
   brew_bundle "$ROOT_DIR/lib/brew/core.Brewfile" "Core CLI Tools"
 fi
 
 # 2. Development Tools
-if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$TOOLS  Install Development Tools (Git, K8s, etc.)?"; then
+if selected dev; then
   brew_bundle "$ROOT_DIR/lib/brew/dev.Brewfile" "Development Tools"
 fi
 
 # 3. Runtimes & DBs
-if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$DATABASE  Install Language Runtimes & Databases?"; then
+if selected runtimes; then
   brew_bundle "$ROOT_DIR/lib/brew/runtimes.Brewfile" "Runtimes & Databases"
 fi
 
 # 4. Modern AI Tools
-if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$BRAIN  Install Modern AI Tools (Ollama, Claude, Copilot)?"; then
+if selected modern; then
   brew_bundle "$ROOT_DIR/lib/brew/modern.Brewfile" "Modern AI Tools"
 fi
 
 # 5. Apps & Casks
-if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$COMPUTER  Install GUI Apps (Casks)?"; then
+if selected apps; then
   brew_bundle "$ROOT_DIR/lib/brew/apps.Brewfile" "Applications"
 fi
 
 # 6. Fonts
-if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$FONT  Install Typography (Fonts)?"; then
+if selected fonts; then
   brew_bundle "$ROOT_DIR/lib/brew/fonts.Brewfile" "Fonts"
 fi
 
 # 7. Shell & Media
-if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$TERMINAL  Install Shell (Fish, Tmux) & $MEDIA Media tools?"; then
+if selected shell_media; then
   brew_bundle "$ROOT_DIR/lib/brew/shell.Brewfile" "Shell Environment"
   brew_bundle "$ROOT_DIR/lib/brew/media.Brewfile" "Media Tools"
 fi
 
 # 8. Symlinks
-if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$LINK  Link Dotfiles (Git, Tmux, psql, etc.)?"; then
+if selected links; then
   setup_links
 fi
 
 # 9. macOS Preferences
-if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$APPLE  Apply macOS System Preferences?"; then
+if selected macos; then
   setup_macos
 fi
 
 # 10. Fish Shell Activation
-if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$FISH  Switch default shell to Fish?"; then
+if selected fish; then
   setup_shell
 fi
 
 # 11. VSCode Setup
-if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$GEAR  Configure VSCode (Links & Extensions)?"; then
+if selected vscode; then
   setup_vscode
 fi
 
 # Cleanup
-if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$CLEAN  Run Homebrew cleanup and upgrade?"; then
+if selected cleanup; then
   cleanup_homebrew
 fi
 
