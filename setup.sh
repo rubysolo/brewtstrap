@@ -71,43 +71,53 @@ if selected runtimes; then
   brew_bundle "$ROOT_DIR/lib/brew/runtimes.Brewfile" "Runtimes & Databases"
 fi
 
-# 4. Modern AI Tools
+# 4. Computer Vision & ML
+if selected cvml; then
+  brew_bundle "$ROOT_DIR/lib/brew/cvml.Brewfile" "Computer Vision & ML"
+fi
+
+# 5. Networking Tools
+if selected network; then
+  brew_bundle "$ROOT_DIR/lib/brew/network.Brewfile" "Networking Tools"
+fi
+
+# 6. Modern AI Tools
 if selected modern; then
   brew_bundle "$ROOT_DIR/lib/brew/modern.Brewfile" "Modern AI Tools"
 fi
 
-# 5. Apps & Casks
+# 7. Apps & Casks
 if selected apps; then
   brew_bundle "$ROOT_DIR/lib/brew/apps.Brewfile" "Applications"
 fi
 
-# 6. Fonts
+# 8. Fonts
 if selected fonts; then
   brew_bundle "$ROOT_DIR/lib/brew/fonts.Brewfile" "Fonts"
 fi
 
-# 7. Shell & Media
+# 9. Shell & Media
 if selected shell_media; then
   brew_bundle "$ROOT_DIR/lib/brew/shell.Brewfile" "Shell Environment"
   brew_bundle "$ROOT_DIR/lib/brew/media.Brewfile" "Media Tools"
 fi
 
-# 8. Symlinks
+# 10. Symlinks
 if selected links; then
   setup_links
 fi
 
-# 9. macOS Preferences
+# 11. macOS Preferences
 if selected macos; then
   setup_macos
 fi
 
-# 10. Fish Shell Activation
+# 12. Fish Shell Activation
 if selected fish; then
   setup_shell
 fi
 
-# 11. VSCode Setup
+# 13. VSCode Setup
 if selected vscode; then
   setup_vscode
 fi

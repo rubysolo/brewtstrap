@@ -3,20 +3,27 @@
 # Provides `choose_tasks` which populates `SELECTED_MODULES` array.
 
 # Modules and human-friendly labels (order matters)
-_MODULE_KEYS=(homebrew dev runtimes modern apps fonts shell_media links macos fish vscode cleanup)
+_MODULE_KEYS=(
+  "brew_all"
+  "homebrew" "dev" "runtimes" "cvml" "network" "modern" "apps" "fonts" "shell_media"
+  "links" "macos" "fish" "vscode" "cleanup"
+)
 _MODULE_LABELS=(
-  "Install Homebrew and Core CLI tools"
-  "Install Development Tools (Git, K8s, etc.)"
-  "Install Language Runtimes & Databases"
-  "Install Modern AI Tools (Ollama, Claude, Copilot)"
-  "Install GUI Applications (Casks)"
-  "Install Typography (Fonts)"
-  "Install Shell (Fish, Tmux) & Media tools"
-  "Link Dotfiles (Git, Tmux, psql, etc.)"
-  "Apply macOS System Preferences"
-  "Switch default shell to Fish"
-  "Configure VSCode (Extensions & Settings)"
-  "Run Homebrew cleanup & upgrade"
+  "📦 SELECT ALL HOMEBREW BUNDLES"
+  "  ├── Core CLI Tools"
+  "  ├── Development Tools (Git, K8s, etc.)"
+  "  ├── Language Runtimes & Databases"
+  "  ├── Computer Vision & ML (CVML)"
+  "  ├── Networking Tools"
+  "  ├── Modern AI Tools (Ollama, Claude, etc.)"
+  "  ├── GUI Applications (Casks)"
+  "  ├── Typography (Fonts)"
+  "  └── Shell Environment & Media"
+  "🔗 Link Dotfiles (Git, Tmux, psql, etc.)"
+  "⚙️  Apply macOS System Preferences"
+  "🐚 Switch default shell to Fish"
+  "💻 Configure VSCode (Extensions & Settings)"
+  "🧹 Run Homebrew cleanup & upgrade"
 )
 
 # choose_tasks: sets SELECTED_MODULES array (global) and returns.
@@ -37,11 +44,20 @@ choose_tasks() {
         fi
       done
     # Run gum in a subshell with problematic style env vars unset
-    done < <( (unset BOLD ITALIC UNDERLINE; printf "%s\n" "${_MODULE_LABELS[@]}" | gum choose --no-limit) )
+    done < <( (unset BOLD ITALIC UNDERLINE; printf "%s\n" "${_MODULE_LABELS[@]}" | gum choose --no-limit --header="Select modules to install (Space to toggle, Enter to confirm)") )
 
     if [ "${#SELECTED_MODULES[@]}" -eq 0 ]; then
       echo "No selection made; aborting." >&2
       exit 1
+    fi
+
+    # Expand "brew_all" if selected
+    if is_selected "brew_all"; then
+      for key in homebrew dev runtimes cvml network modern apps fonts shell_media; do
+        if ! is_selected "$key"; then
+          SELECTED_MODULES+=("$key")
+        fi
+      done
     fi
 
     return 0
@@ -90,6 +106,14 @@ choose_tasks() {
         for i in "${!_MODULE_KEYS[@]}"; do
           [ "${sel[i]}" -eq 1 ] && SELECTED_MODULES+=("${_MODULE_KEYS[i]}")
         done
+        # Expand "brew_all" if selected
+        if is_selected "brew_all"; then
+          for key in homebrew dev runtimes cvml network modern apps fonts shell_media; do
+            if ! is_selected "$key"; then
+              SELECTED_MODULES+=("$key")
+            fi
+          done
+        fi
         return 0
         ;;
       q|quit) echo "Aborted."; exit 0 ;;

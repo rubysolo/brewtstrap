@@ -1,3 +1,6 @@
+brew "exiftool"
 brew "gifsicle"
+brew "imagemagick"
 brew "ocrmypdf"
+brew "typst"
 brew "yt-dlp"

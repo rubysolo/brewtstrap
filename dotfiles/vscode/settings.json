@@ -70,5 +70,8 @@
     "*.ipynb": "jupyter.notebook.ipynb"
   },
   "workbench.tree.renderIndentGuides": "none",
-  "workbench.colorTheme": "Cobalt2"
+  "workbench.colorTheme": "Cobalt2",
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4o-mini",
+  "chat.mcp.gallery.enabled": true
 }

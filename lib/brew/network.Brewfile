@@ -1,0 +1,7 @@
+brew "cloudflared"
+brew "curl"
+brew "minio"
+brew "nmap"
+brew "socat"
+brew "websocat"
+brew "wget"

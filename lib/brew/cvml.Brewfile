@@ -1,0 +1,2 @@
+brew "onnx"
+brew "openblas"

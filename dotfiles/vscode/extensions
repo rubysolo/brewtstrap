@@ -1,7 +1,7 @@
 # languages
 4ops.terraform
 bradymholt.pgformatter
-bungcip.better-toml
+tamasfe.even-better-toml
 dbaeumer.vscode-eslint
 efanzh.graphviz-preview
 elliotlarson.ruby-around-the-block
@@ -22,12 +22,11 @@ msaraiva.surface
 nwolverson.language-purescript
 pgourlain.erlang
 phoenixframework.phoenix
-rebornix.ruby
 richie5um2.vscode-sort-json
-rust-lang.rust
+rust-lang.rust-analyzer
+shopify.ruby-lsp
 skyapps.fish-vscode
 stephanvs.dot
-wingrunr21.vscode-ruby
 
 # themes
 azemoh.one-monokai
@@ -36,7 +35,6 @@ robbowen.synthwave-vscode
 wesbos.theme-cobalt2
 
 # general tools
-2gua.rainbow-brackets
 bungcip.better-toml
 eamodio.gitlens
 elmouradiamine.vscode-diagon
@@ -51,7 +49,6 @@ mrob95.vscode-talonscript
 ms-azuretools.vscode-docker
 ms-vscode.test-adapter-converter
 ms-vsliveshare.vsliveshare
-ms-vsliveshare.vsliveshare-audio
 ms-vsliveshare.vsliveshare-pack
 nick-rudenko.back-n-forth
 pnp.polacode
@@ -64,4 +61,4 @@ skyapps.fish-vscode
 sleistner.vscode-fileutils
 vadimcn.vscode-lldb
 vscodevim.vim
-wwm.better-align
+chouzz.better-align
