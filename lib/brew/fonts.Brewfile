@@ -1,0 +1,6 @@
+cask "font-cascadia-code"
+cask "font-consolas-for-powerline"
+cask "font-envy-code-r"
+cask "font-inconsolata"
+cask "font-monaspace"
+cask "fontforge-app"
