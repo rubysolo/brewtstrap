@@ -28,14 +28,9 @@
     "comment": 2
   },
   "breadcrumbs.enabled": true,
-  "cursorless.hatEnablement.shapes": {
-    "bolt": true,
-    "curve": true
-  },
   "debug.allowBreakpointsEverywhere": true,
   "diffEditor.renderSideBySide": true,
   "editor.accessibilitySupport": "off",
-  "editor.codeLens": false,
   "editor.cursorStyle": "line",
   "editor.fontFamily": "'Operator Mono', Menlo, Monaco, 'Courier New', monospace",
   "editor.fontLigatures": true,
@@ -75,7 +70,5 @@
     "*.ipynb": "jupyter.notebook.ipynb"
   },
   "workbench.tree.renderIndentGuides": "none",
-  "erlang.rebarPath": "/Users/solo/.asdf/installs/elixir/1.13.4-otp-25/.mix",
-  "erlang.erlangPath": "/Users/solo/.asdf/installs/elixir/1.13.4-otp-25/bin",
   "workbench.colorTheme": "Cobalt2"
 }

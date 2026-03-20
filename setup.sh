@@ -1,239 +1,110 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# ./setup.sh
+# BREWTSTRAP - Modern Machine Setup (2026 Edition)
+# 🚀 Refactored, Modular, and Interactive
 
-# - installs system packages with Homebrew package manager
-# - changes shell to fish from Homebrew
-# - creates symlinks from `$(pwd)/dotfiles` to `$HOME`
-# - installs programming language runtimes with asdf
-# - installs or updates Vim plugins
+set -eu
 
-# This script can be run safely multiple times.
-# It is tested on macOS Big Sur (11.0).
+# Source all the things
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$ROOT_DIR/lib/utils.sh"
+source "$ROOT_DIR/lib/brew.sh"
+source "$ROOT_DIR/lib/macos.sh"
+source "$ROOT_DIR/lib/shell.sh"
+source "$ROOT_DIR/lib/links.sh"
+source "$ROOT_DIR/lib/vscode.sh"
 
-set -eux
+# Default to interactive mode
+AUTO_INSTALL=false
 
-#------------------------------------------------------------------------------
-# Homebrew and packages
-HOMEBREW_PREFIX="/opt/homebrew"
-
-if [ -d "$HOMEBREW_PREFIX" ]; then
-  if ! [ -r "$HOMEBREW_PREFIX" ]; then
-    sudo chown -R "$LOGNAME:admin" "$HOMEBREW_PREFIX"
-  fi
-else
-  sudo mkdir "$HOMEBREW_PREFIX"
-  sudo chflags norestricted "$HOMEBREW_PREFIX"
-  sudo chown -R "$LOGNAME:admin" "$HOMEBREW_PREFIX"
-fi
-
-if ! command -v brew >/dev/null; then
-  curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
-  export PATH="$HOMEBREW_PREFIX/bin:$PATH"
-fi
-
-brew analytics off
-brew update
-brew bundle -v --file=- <<EOF
-  brew "ack"
-  brew "awscli"
-  brew "coreutils"
-  brew "csvkit"
-  brew "curl"
-  brew "dos2unix"
-  brew "exercism"
-  brew "fd"
-  brew "fish"
-  brew "fzf"
-  brew "gemini-cli"
-  brew "gh"
-  brew "gifsicle"
-  brew "git"
-  brew "git-lfs"
-  brew "glew"
-  brew "glfw3"
-  brew "goreleaser"
-  brew "gpg"
-  brew "graphviz"
-  brew "helix"
-  brew "hub"
-  brew "jq"
-  brew "k9s"
-  brew "kubectl"
-  brew "libyaml"
-  brew "lsd"
-  brew "mas"
-  brew "miller"
-  brew "mkcert"
-  brew "ocrmypdf"
-  brew "ollama"
-  brew "openconnect"
-  brew "openssl"
-  brew "pkg-config"
-  brew "postgresql"
-  brew "protobuf"
-  brew "pgformatter"
-  brew "redis"
-  brew "ripgrep"
-  brew "shared-mime-info"
-  brew "shellcheck"
-  brew "the_silver_searcher"
-  brew "tfenv"
-  brew "tflint"
-  brew "tldr"
-  brew "tmux"
-  brew "tor"
-  brew "tree"
-  brew "tree-sitter-cli"
-  brew "vim"
-  brew "watch"
-  brew "watchman"
-  brew "yt-dlp"
-  brew "zellij"
-  brew "zlib"
-
-  cask "1password-cli"
-  cask "alfred"
-  cask "boop"
-  cask "claude-code"
-  cask "clipy"
-  cask "copilot-cli"
-  cask "dash"
-  cask "discord"
-  cask "docker-desktop"
-  cask "dropbox"
-  cask "fontforge-app"
-  cask "font-cascadia-code"
-  cask "font-consolas-for-powerline"
-  cask "font-envy-code-r"
-  cask "font-inconsolata"
-  cask "font-monaspace"
-  cask "ghostty"
-  cask "gitup-app"
-  cask "iterm2"
-  cask "maccy"
-  cask "ngrok"
-  cask "rectangle"
-  cask "the-unarchiver"
-  cask "tunnelblick"
-  cask "visual-studio-code"
-  cask "vlc"
-EOF
-
-brew install --cask ./font-envy-code-r-nerd-font.rb
-
-brew upgrade
-brew cleanup
-
-#------------------------------------------------------------------------------
-# Set preferences
-$PWD/dotfiles/macprefs
-
-#------------------------------------------------------------------------------
-# Shell
-update_shell() {
-  (
-    sudo chown -R $(whoami) /usr/local/share/fish
-    chmod u+w /usr/local/share/fish
-  )
-
-  local shell_path;
-  shell_path="$(command -v fish)"
-
-  if ! grep "$shell_path" /etc/shells > /dev/null 2>&1 ; then
-    sudo sh -c "echo $shell_path >> /etc/shells"
-  fi
-  chsh -s "$shell_path"
-}
-
-case "$SHELL" in
-  */fish)
-    if [ "$(command -v fish)" != "$HOMEBREW_PREFIX/bin/fish" ] ; then
-      update_shell
-    fi
-    ;;
-  *)
-    update_shell
-    ;;
-esac
-
-#------------------------------------------------------------------------------
-# Symlinks
-(
-  cd "dotfiles"
-
-  ln -sf "$PWD/asdf/asdfrc" "$HOME/.asdfrc"
-  ln -sf "$PWD/asdf/tool-versions" "$HOME/.tool-versions"
-
-  ln -sf "$PWD/config" "$HOME/.config"
-
-  ln -sf "$PWD/git/gitattributes" "$HOME/.gitattributes"
-  ln -sf "$PWD/git/gitconfig" "$HOME/.gitconfig"
-  ln -sf "$PWD/git/gitignore" "$HOME/.gitignore"
-  ln -sf "$PWD/git/gitmessage" "$HOME/.gitmessage"
-
-  # Specify the preferences directory
-  defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "$PWD/iterm2"
-  # Tell iTerm2 to use the custom preferences in the directory
-  defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
-
-  mkdir -p "$HOME/.local/bin"
-
-  ln -sf "$PWD/sql/psqlrc" "$HOME/.psqlrc"
-
-  mkdir -p "$HOME/.ssh"
-
-  ln -sf "$PWD/tmux/tmux.conf" "$HOME/.tmux.conf"
-
-  mkdir -p "$HOME/Library/Application Support/Code/User"
-  ln -s "$PWD/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
-  ln -s "$PWD/vscode/keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
-  ln -s "$PWD/vscode/snippets" "$HOME/Library/Application Support/Code/User/snippets"
-
-  cat "$PWD/vscode/extensions" | grep -v '^#' | egrep -v '^\s*$' | xargs -L1 code --install-extension
-
-  defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
-)
-
-#------------------------------------------------------------------------------
-# Languages
-asdf_install() {
-  if ! asdf plugin-list | grep -Fq "$1"; then
-    asdf plugin-add $1
-  fi
-
-  asdf install $1 latest
-  asdf global $1 $(asdf latest $1)
-}
-
-# link against brew libraries
-BREW_PACKAGES=(openssl zlib readline)
-SYSROOT=$(xcrun --sdk macosx --show-sdk-path)
-
-INCLUDES=""
-LIBRARIES=""
-for INDEX in ${!BREW_PACKAGES[@]}; do
-    BREW_PACKAGE=${BREW_PACKAGES[${INDEX}]}
-    PATH_PREFIX=$(brew --prefix ${BREW_PACKAGE})
-    INCLUDES="-I${PATH_PREFIX}/include ${INCLUDES}"
-    LIBRARIES="-L${PATH_PREFIX}/lib ${LIBRARIES}"
+# Simple flag parsing
+for arg in "$@"; do
+  case $arg in
+    --all|-a)
+      AUTO_INSTALL=true
+      shift
+      ;;
+    --help|-h)
+      echo "Usage: ./setup.sh [--all|-a]"
+      echo "  --all: Install everything without asking (lights out mode)"
+      exit 0
+      ;;
+  esac
 done
-INCLUDES="${INCLUDES} -I${SYSROOT}/usr/include"
-LIBRARIES="${LIBRARIES} -L${SYSROOT}/usr/lib"
 
-export CFLAGS="-isysroot ${SYSROOT} ${INCLUDES}"
-export LDFLAGS="${LIBRARIES}"
+header "$ROCKET  Welcome to BREWTSTRAP 2026"
+info "This script will help you set up your new machine."
+info "It is recommended to run this from a terminal with Full Disk Access."
 
-# we don't need no steenking signatures!
-export NODEJS_CHECK_SIGNATURES=no
+if [ "$AUTO_INSTALL" = true ]; then
+  warn "LIGHTS OUT MODE ACTIVATED: Installing the whole enchilada..."
+else
+  info "INTERACTIVE MODE: You'll be asked which bundles to install."
+  echo ""
+fi
 
-asdf_install elixir
-asdf_install elm
-asdf_install gleam
-asdf_install golang
-asdf_install nodejs
-asdf_install purescript
-asdf_install python
-asdf_install ruby
-asdf_install rust
-asdf_install yarn
+# 1. Homebrew Core
+if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$BREW  Install Homebrew and Core CLI tools?"; then
+  install_homebrew
+  brew_bundle "$ROOT_DIR/lib/brew/core.Brewfile" "Core CLI Tools"
+fi
+
+# 2. Development Tools
+if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$TOOLS  Install Development Tools (Git, K8s, etc.)?"; then
+  brew_bundle "$ROOT_DIR/lib/brew/dev.Brewfile" "Development Tools"
+fi
+
+# 3. Runtimes & DBs
+if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$DATABASE  Install Language Runtimes & Databases?"; then
+  brew_bundle "$ROOT_DIR/lib/brew/runtimes.Brewfile" "Runtimes & Databases"
+fi
+
+# 4. Modern AI Tools
+if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$BRAIN  Install Modern AI Tools (Ollama, Claude, Copilot)?"; then
+  brew_bundle "$ROOT_DIR/lib/brew/modern.Brewfile" "Modern AI Tools"
+fi
+
+# 5. Apps & Casks
+if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$COMPUTER  Install GUI Apps (Casks)?"; then
+  brew_bundle "$ROOT_DIR/lib/brew/apps.Brewfile" "Applications"
+fi
+
+# 6. Fonts
+if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$FONT  Install Typography (Fonts)?"; then
+  brew_bundle "$ROOT_DIR/lib/brew/fonts.Brewfile" "Fonts"
+fi
+
+# 7. Shell & Media
+if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$TERMINAL  Install Shell (Fish, Tmux) & $MEDIA Media tools?"; then
+  brew_bundle "$ROOT_DIR/lib/brew/shell.Brewfile" "Shell Environment"
+  brew_bundle "$ROOT_DIR/lib/brew/media.Brewfile" "Media Tools"
+fi
+
+# 8. Symlinks
+if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$LINK  Link Dotfiles (Git, Tmux, psql, etc.)?"; then
+  setup_links
+fi
+
+# 9. macOS Preferences
+if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$APPLE  Apply macOS System Preferences?"; then
+  setup_macos
+fi
+
+# 10. Fish Shell Activation
+if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$FISH  Switch default shell to Fish?"; then
+  setup_shell
+fi
+
+# 11. VSCode Setup
+if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$GEAR  Configure VSCode (Links & Extensions)?"; then
+  setup_vscode
+fi
+
+# Cleanup
+if [ "$AUTO_INSTALL" = true ] || ask_yes_no "$CLEAN  Run Homebrew cleanup and upgrade?"; then
+  cleanup_homebrew
+fi
+
+header "$SPARKLES  Machine Setup Complete!  $SPARKLES"
+info "Please restart your terminal or log out/in for all changes to take effect."
+success "Enjoy your new setup! (2026 Edition)"
