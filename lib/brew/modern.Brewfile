@@ -1,4 +1,7 @@
+brew "aider"
 brew "gemini-cli"
+brew "Kilo-Org/homebrew-tap/kilo"
 brew "ollama"
+brew "opencode"
 cask "claude-code"
 cask "copilot-cli"
