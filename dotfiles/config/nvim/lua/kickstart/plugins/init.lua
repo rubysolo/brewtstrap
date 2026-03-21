@@ -64,6 +64,15 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'nvim-tree/nvim-tree.lua',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('nvim-tree').setup()
+      vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>')
+    end,
+  },
+
   { 'tpope/vim-surround' },
   { 'vim-scripts/ReplaceWithRegister' },
   { 'skywind3000/vim-quickui' },
