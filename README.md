@@ -62,4 +62,18 @@ You can easily customize `Brewtstrap` to fit your needs by modifying the files i
 - **`dotfiles/`**: Contains all the configuration files to be symlinked.
 - **`README.md`**: You are here.
 
+## Troubleshooting
+
+### gum error: "bool value must be true, 1, yes, false, 0 or no"
+
+If you see an error like `gum: error: --bold: bool value must be true, 1, yes, false, 0 or no but got "\\033[1m"`, this means you have ANSI color environment variables (such as `BOLD`, `ITALIC`, or `UNDERLINE`) set in your shell profile. These conflict with gum's boolean flags.
+
+The scripts in `lib/` already unset these variables before calling gum. If you encounter this error in your own shell, unset them manually:
+
+```bash
+unset BOLD ITALIC UNDERLINE
+```
+
+Or add this to your shell config to prevent it from setting these variables in the first place.
+
 ## Enjoy your new setup

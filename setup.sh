@@ -15,6 +15,7 @@ source "$ROOT_DIR/lib/git.sh"
 source "$ROOT_DIR/lib/links.sh"
 source "$ROOT_DIR/lib/vscode.sh"
 source "$ROOT_DIR/lib/interactive.sh"
+source "$ROOT_DIR/lib/mise.sh"
 
 # Default to interactive mode
 AUTO_INSTALL=false
@@ -126,6 +127,11 @@ fi
 # 14. VSCode Setup
 if selected vscode; then
   setup_vscode
+fi
+
+# 15. Mise Language Installation
+if selected mise; then
+  setup_mise
 fi
 
 # Cleanup
