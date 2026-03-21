@@ -31,6 +31,7 @@ export FISH="🐟"
 export FONT="🔠"
 export MEDIA="🎬"
 export CLEAN="🧹"
+export GIT="🌳"
 
 # Logging functions
 function info() {

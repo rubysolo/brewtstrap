@@ -11,6 +11,7 @@ source "$ROOT_DIR/lib/utils.sh"
 source "$ROOT_DIR/lib/brew.sh"
 source "$ROOT_DIR/lib/macos.sh"
 source "$ROOT_DIR/lib/shell.sh"
+source "$ROOT_DIR/lib/git.sh"
 source "$ROOT_DIR/lib/links.sh"
 source "$ROOT_DIR/lib/vscode.sh"
 source "$ROOT_DIR/lib/interactive.sh"
@@ -117,7 +118,12 @@ if selected fish; then
   setup_shell
 fi
 
-# 13. VSCode Setup
+# 13. Git Configuration
+if selected git; then
+  setup_git
+fi
+
+# 14. VSCode Setup
 if selected vscode; then
   setup_vscode
 fi

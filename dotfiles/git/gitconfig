@@ -172,9 +172,5 @@
 [url "https://github.com/"]
   insteadOf = "gh:"
 
-[user]
-  name = Solomon White
-  email = solomon@blinker.com
-
 [includeIf "gitdir:~/Projects/blinker/"]
   path = ~/Projects/blinker/.gitconfig

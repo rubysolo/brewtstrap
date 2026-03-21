@@ -6,7 +6,7 @@
 _MODULE_KEYS=(
   "brew_all"
   "homebrew" "dev" "runtimes" "cvml" "network" "modern" "apps" "fonts" "shell_media"
-  "links" "macos" "fish" "vscode" "cleanup"
+  "links" "macos" "fish" "git" "vscode" "cleanup"
 )
 _MODULE_LABELS=(
   "📦 SELECT ALL HOMEBREW BUNDLES"
@@ -22,6 +22,7 @@ _MODULE_LABELS=(
   "🔗 Link Dotfiles (Git, Tmux, psql, etc.)"
   "⚙️  Apply macOS System Preferences"
   "🐚 Switch default shell to Fish"
+  "👤 Configure Git (Name & Email)"
   "💻 Configure VSCode (Extensions & Settings)"
   "🧹 Run Homebrew cleanup & upgrade"
 )
