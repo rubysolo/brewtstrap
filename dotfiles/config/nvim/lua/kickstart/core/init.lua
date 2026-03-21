@@ -20,6 +20,11 @@ opt.scrolloff = 8
 opt.sidescrolloff = 8
 opt.termguicolors = true
 
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = { "*.py", "*.js", "*.ts", "*.tsx", "*.lua", "*.sh", "*.go", "*.rs" },
+  command = [[%s/\s+$//e]],
+})
+
 g.mapleader = ' '
 
 map({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
