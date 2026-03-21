@@ -18,6 +18,7 @@ alias lla="ls -la"
 alias lt="ls --tree"
 alias o="open"
 alias v="code"
+alias vim="nvim"
 
 # List all files colorized in long format
 # alias l="ls -lF"
