@@ -1,3 +1,4 @@
+brew "dolt"
 brew "libyaml"
 brew "openssl"
 brew "postgresql"
