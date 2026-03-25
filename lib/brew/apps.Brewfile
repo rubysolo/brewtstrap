@@ -1,4 +1,5 @@
 cask "1password-cli"
+cask "balenaetcher"
 cask "alfred"
 cask "boop"
 cask "dash"
