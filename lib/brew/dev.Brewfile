@@ -1,5 +1,7 @@
 brew "act"
 brew "awscli"
+brew "caddy"
+brew "cloudflare-wrangler"
 brew "cmake"
 brew "csvkit"
 brew "exercism"
