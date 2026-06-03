@@ -54,14 +54,21 @@ function _new_worktree --description 'Shared helper: _new_worktree <type> <name>
         return 1
     end
 
-    # Copy .vscode/settings.json from the main worktree, if it exists.
-    set -l settings_src $repo_root/main/.vscode/settings.json
-    if test -f $settings_src
-        mkdir -p $worktree_path/.vscode
-        cp $settings_src $worktree_path/.vscode/settings.json
-        echo $dim"📋  Copied .vscode/settings.json"$reset
-    else
-        echo $yellow"⚠  $settings_src not found — skipping .vscode/settings.json copy"$reset
+    # Copy selected files from the main worktree, if they exist.
+    set -l files_to_copy \
+        .vscode/settings.json \
+        .mise.local.toml
+
+    for rel_path in $files_to_copy
+        set -l src $repo_root/main/$rel_path
+        set -l dest $worktree_path/$rel_path
+        if test -f $src
+            mkdir -p (path dirname $dest)
+            cp $src $dest
+            echo $dim"📋  Copied $rel_path"$reset
+        else
+            echo $yellow"⚠  $src not found — skipping $rel_path copy"$reset
+        end
     end
 
     echo $green"✔  Ready"$reset
