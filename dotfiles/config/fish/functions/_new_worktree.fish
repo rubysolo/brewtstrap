@@ -42,9 +42,21 @@ function _new_worktree --description 'Shared helper: _new_worktree <type> <name>
     # Create the type directory (feature/, chore/, fix/) if it doesn't exist yet.
     mkdir -p $repo_root/$type
 
-    # Check whether the branch already exists locally.
+    # Branch resolution order:
+    # 1) Existing local branch
+    # 2) Existing remote branch (create local tracking branch)
+    # 3) Create a new branch from main
+    set -l remote_name origin
+    if not git remote get-url $remote_name >/dev/null 2>&1
+        set remote_name (git remote | head -n 1)
+    end
+
     if git show-ref --verify --quiet refs/heads/$branch_name
         git worktree add $worktree_path $branch_name
+    else if test -n "$remote_name"; and git ls-remote --exit-code --heads $remote_name $branch_name >/dev/null 2>&1
+        # Ensure the remote-tracking ref exists locally before creating the worktree.
+        git fetch --no-tags $remote_name $branch_name >/dev/null 2>&1
+        git worktree add --track -b $branch_name $worktree_path $remote_name/$branch_name
     else
         git worktree add -b $branch_name $worktree_path main
     end
