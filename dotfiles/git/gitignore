@@ -2,3 +2,4 @@
 .elixir_ls
 .vscode
 node_modules
+.mise.local.toml

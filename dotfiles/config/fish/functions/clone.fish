@@ -24,10 +24,11 @@ function clone --description 'Clone a repository and set up with worktrees'
     cd -- $dir_name; or return 1
 
     git clone --bare $repo .bare; or return 1
+    git -C .bare config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"; or return 1
+    git -C .bare fetch origin; or return 1
     printf "gitdir: ./.bare\n" > .git; or return 1
 
-    git worktree add -b main main origin/main; or return 1
-    git -C main branch --set-upstream-to=origin/main main; or return 1
+    git worktree add -b main --track origin/main
 
     mkdir -p main/.vscode
     if test -f main/.vscode/settings.json
