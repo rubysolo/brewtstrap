@@ -28,16 +28,21 @@ function clone --description 'Clone a repository and set up with worktrees'
     git -C .bare fetch origin; or return 1
     printf "gitdir: ./.bare\n" > .git; or return 1
 
-    git worktree add -b main --track origin/main
+    # `git clone --bare` already creates local branches for every remote head,
+    # so check out the existing default branch instead of creating a new one.
+    set default_branch (git -C .bare symbolic-ref --short HEAD); or return 1
 
-    mkdir -p main/.vscode
-    if test -f main/.vscode/settings.json
-        printf "%s\n" "main/.vscode/settings.json already exists, skipping..." >&2
+    git worktree add $default_branch $default_branch; or return 1
+    git -C $default_branch branch --set-upstream-to=origin/$default_branch >/dev/null 2>&1
+
+    mkdir -p $default_branch/.vscode
+    if test -f $default_branch/.vscode/settings.json
+        printf "%s\n" "$default_branch/.vscode/settings.json already exists, skipping..." >&2
     else
-        echo  > main/.vscode/settings.json '{'
-        echo >> main/.vscode/settings.json '    "window.title": "${dirty}${activeEditorShort}${separator}$dir_name → ${rootName}"'
-        echo >> main/.vscode/settings.json '}'
+        echo  > $default_branch/.vscode/settings.json '{'
+        echo >> $default_branch/.vscode/settings.json "    \"window.title\": \"\${dirty}\${activeEditorShort}\${separator}$dir_name → \${rootName}\""
+        echo >> $default_branch/.vscode/settings.json '}'
     end
 
-    printf "Cloned %s into %s and set up worktree 'main' tracking origin/main\n" $repo $dir_name
+    printf "Cloned %s into %s and set up worktree '%s' tracking origin/%s\n" $repo $dir_name $default_branch $default_branch
 end
