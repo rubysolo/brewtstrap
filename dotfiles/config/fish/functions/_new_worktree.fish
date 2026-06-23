@@ -83,6 +83,26 @@ function _new_worktree --description 'Shared helper: _new_worktree <type> <name>
         end
     end
 
-    echo $green"✔  Ready"$reset
     cd $worktree_path
+
+    # We copied .mise.local.toml from the trusted main worktree, so trust the
+    # copy — mise won't inject its env (DATABASE_URL, PORT, secrets) into this
+    # worktree's shells until it's trusted.
+    if type -q mise; and test -f .mise.local.toml
+        mise trust .mise.local.toml >/dev/null 2>&1
+    end
+
+    # Provision the worktree via the project's own setup hook. The repo owns
+    # what "set up" means (deps, per-worktree DBs, assets, …); we just run it.
+    if test -x ./bin/worktree-setup
+        echo $cyan"⚙  Provisioning via bin/worktree-setup…"$reset
+        if not ./bin/worktree-setup
+            echo $red"✖  bin/worktree-setup failed — finish setup manually"$reset >&2
+        end
+    else
+        echo $yellow"⚠  No bin/worktree-setup in this repo — skipping provisioning."$reset >&2
+        echo $dim"   Add an executable bin/worktree-setup to auto-provision new worktrees."$reset >&2
+    end
+
+    echo $green"✔  Ready"$reset
 end

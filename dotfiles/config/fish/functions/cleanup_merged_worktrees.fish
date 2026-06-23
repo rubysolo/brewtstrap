@@ -1,4 +1,4 @@
-function cleanup_merged_mr_worktrees --description 'Remove merged MR branches and their worktrees'
+function cleanup_merged_worktrees --description 'Remove merged PR/MR branches and their worktrees'
     set -l reset  (set_color normal)
     set -l bold   (set_color --bold)
     set -l cyan   (set_color cyan)
@@ -9,7 +9,7 @@ function cleanup_merged_mr_worktrees --description 'Remove merged MR branches an
 
     set -l dry_run 0
     if test (count $argv) -gt 1
-        echo $red"Usage: cleanup_merged_mr_worktrees [--dry-run|-n]"$reset >&2
+        echo $red"Usage: cleanup_merged_worktrees [--dry-run|-n]"$reset >&2
         return 2
     end
     if test (count $argv) -eq 1
@@ -17,15 +17,8 @@ function cleanup_merged_mr_worktrees --description 'Remove merged MR branches an
             case --dry-run -n
                 set dry_run 1
             case '*'
-                echo $red"Usage: cleanup_merged_mr_worktrees [--dry-run|-n]"$reset >&2
+                echo $red"Usage: cleanup_merged_worktrees [--dry-run|-n]"$reset >&2
                 return 2
-        end
-    end
-
-    for cmd in git glab jq awk sort
-        if not type -q $cmd
-            echo $red"✖ Missing dependency: $cmd"$reset >&2
-            return 1
         end
     end
 
@@ -34,23 +27,55 @@ function cleanup_merged_mr_worktrees --description 'Remove merged MR branches an
         return 1
     end
 
+    # Select the forge CLI from the repo's remote (gh for GitHub, glab for GitLab).
+    set -l forge (_forge_kind)
+    if test -z "$forge"
+        echo $red"✖ Could not determine forge from remote — set FORGE_KIND to gh or glab"$reset >&2
+        return 1
+    end
+
+    for cmd in git $forge awk sort
+        if not type -q $cmd
+            echo $red"✖ Missing dependency: $cmd"$reset >&2
+            return 1
+        end
+    end
+
     set -l mode_label "apply"
     if test $dry_run -eq 1
         set mode_label "dry-run"
     end
 
-    echo $cyan"🧹 Scanning merged MRs ($mode_label)"$reset
+    echo $cyan"🧹 Scanning merged branches via $forge ($mode_label)"$reset
 
-    set -l branches (
-        glab mr list -M --author @me -F json \
-        | jq -r '.[] | .source_branch? // empty' \
-        | string trim \
-        | string match -rv '^$' \
-        | sort -u
-    )
+    # Each forge reports the merged branches authored by the current user.
+    # gh exposes --jq natively; glab needs an external jq pass.
+    set -l branches
+    switch $forge
+        case gh
+            set branches (
+                gh pr list --state merged --author @me \
+                    --json headRefName --jq '.[].headRefName' \
+                | string trim \
+                | string match -rv '^$' \
+                | sort -u
+            )
+        case glab
+            if not type -q jq
+                echo $red"✖ Missing dependency: jq"$reset >&2
+                return 1
+            end
+            set branches (
+                glab mr list -M --author @me -F json \
+                | jq -r '.[] | .source_branch? // empty' \
+                | string trim \
+                | string match -rv '^$' \
+                | sort -u
+            )
+    end
 
     if test (count $branches) -eq 0
-        echo $yellow"⚠ No merged MR source branches found for @me"$reset
+        echo $yellow"⚠ No merged branches found for @me"$reset
         return 0
     end
 
@@ -59,6 +84,7 @@ function cleanup_merged_mr_worktrees --description 'Remove merged MR branches an
     set -l skipped_branches 0
     set -l skipped_worktrees 0
     set -l failures 0
+    set -l teardown_hooks 0
     set -l current_wt (pwd -P)
 
     for branch in $branches
@@ -76,6 +102,27 @@ function cleanup_merged_mr_worktrees --description 'Remove merged MR branches an
                 echo $yellow"⚠ skipping current worktree: $wt"$reset
                 set skipped_worktrees (math $skipped_worktrees + 1)
                 continue
+            end
+
+            # Let the project reclaim its own per-worktree resources (databases,
+            # ports, volumes, …) via its teardown hook, while the worktree still
+            # exists. Best-effort — a failing hook is reported but never blocks
+            # removal. Projects without the hook just get the worktree/branch
+            # removed, as before.
+            if test -x $wt/bin/worktree-teardown
+                if test $dry_run -eq 1
+                    echo $dim"  would run teardown hook: $wt/bin/worktree-teardown"$reset
+                    set teardown_hooks (math $teardown_hooks + 1)
+                else
+                    pushd $wt
+                    if ./bin/worktree-teardown
+                        set teardown_hooks (math $teardown_hooks + 1)
+                    else
+                        echo $red"✖ teardown hook failed: $wt"$reset >&2
+                        set failures (math $failures + 1)
+                    end
+                    popd
+                end
             end
 
             if test $dry_run -eq 1
@@ -121,6 +168,7 @@ function cleanup_merged_mr_worktrees --description 'Remove merged MR branches an
     echo "  worktrees skipped: $skipped_worktrees"
     echo "  branches deleted:  $removed_branches"
     echo "  branches skipped:  $skipped_branches"
+    echo "  teardown hooks:    $teardown_hooks"
     echo "  failures:          $failures"
 
     if test $failures -gt 0
