@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+#
+# wt — create or switch to a typed git worktree.
+#
+#   wt <type> <name>      e.g. wt feat 1234-xyz
+#
+# Creates <repo_root>/<type>/<name> on branch <type>/<name>, provisions it via
+# the repo's own bin/worktree-setup hook, and prints the worktree path.
+#
+# The path is the ONLY thing written to stdout; all progress output goes to
+# stderr. That contract is what lets a shell wrapper do `cd "$(wt feat foo)"`.
+# Shell functions can't be replaced by a script (a child process can't change
+# its parent's cwd), so the fish/zsh wrappers keep the `cd` and call this for
+# everything else. Keep the logic here, not in the wrappers.
+
+set -euo pipefail
+
+if [ -t 2 ]; then
+    reset=$(tput sgr0 2>/dev/null || true)
+    bold=$(tput bold 2>/dev/null || true)
+    cyan=$(tput setaf 6 2>/dev/null || true)
+    yellow=$(tput setaf 3 2>/dev/null || true)
+    green=$(tput setaf 2 2>/dev/null || true)
+    red=$(tput setaf 1 2>/dev/null || true)
+    dim=$(tput setaf 8 2>/dev/null || true)
+else
+    reset= bold= cyan= yellow= green= red= dim=
+fi
+
+say() { printf '%s\n' "$*" >&2; }
+
+if [ "$#" -ne 2 ]; then
+    say "${red}Usage: wt <type> <name>${reset}"
+    say "${dim}  e.g. wt feat 1234-xyz${reset}"
+    exit 1
+fi
+
+type=$1
+name=$2
+branch_name="$type/$name"
+
+# Find the shared repo root regardless of which worktree we're called from.
+# --git-common-dir always points at the bare repo (.bare).
+if ! git_common=$(git rev-parse --git-common-dir 2>/dev/null); then
+    say "${red}✖  Not inside a git repository${reset}"
+    exit 1
+fi
+repo_root=$(cd "$(dirname "$git_common")" && pwd)
+worktree_path="$repo_root/$type/$name"
+
+if [ -d "$worktree_path" ]; then
+    say "${cyan}🔍  Existing worktree detected: ${bold}${branch_name}${reset}"
+    say "${dim}  → ${worktree_path}${reset}"
+    printf '%s\n' "$worktree_path"
+    exit 0
+fi
+
+say "${yellow}⚙  Setting up new worktree: ${bold}${branch_name}${reset}"
+say "${dim}  → ${worktree_path}${reset}"
+
+mkdir -p "$repo_root/$type"
+
+# Branch resolution order:
+#   1) existing local branch
+#   2) existing remote branch (create a local tracking branch)
+#   3) new branch from main
+remote_name=origin
+if ! git remote get-url "$remote_name" >/dev/null 2>&1; then
+    remote_name=$(git remote | head -n 1)
+fi
+
+if git show-ref --verify --quiet "refs/heads/$branch_name"; then
+    git worktree add "$worktree_path" "$branch_name" >&2
+elif [ -n "$remote_name" ] &&
+    git ls-remote --exit-code --heads "$remote_name" "$branch_name" >/dev/null 2>&1; then
+    # Ensure the remote-tracking ref exists locally before creating the worktree.
+    git fetch --no-tags "$remote_name" "$branch_name" >/dev/null 2>&1
+    git worktree add --track -b "$branch_name" "$worktree_path" "$remote_name/$branch_name" >&2
+else
+    git worktree add -b "$branch_name" "$worktree_path" main >&2
+fi
+
+# Copy selected files from the main worktree, if they exist.
+for rel_path in .vscode/settings.json .mise.local.toml; do
+    src="$repo_root/main/$rel_path"
+    dest="$worktree_path/$rel_path"
+    if [ -f "$src" ]; then
+        mkdir -p "$(dirname "$dest")"
+        cp "$src" "$dest"
+        say "${dim}📋  Copied $rel_path${reset}"
+    else
+        say "${yellow}⚠  $src not found — skipping $rel_path copy${reset}"
+    fi
+done
+
+cd "$worktree_path"
+
+# We copied .mise.local.toml from the trusted main worktree, so trust the copy —
+# mise won't inject this worktree's env (DATABASE_URL, PORT, secrets) otherwise.
+if command -v mise >/dev/null 2>&1 && [ -f .mise.local.toml ]; then
+    mise trust .mise.local.toml >/dev/null 2>&1 || true
+fi
+
+# Provision via the project's own setup hook. The repo owns what "set up" means
+# (deps, per-worktree DBs, assets, …); we just run it.
+if [ -x ./bin/worktree-setup ]; then
+    say "${cyan}⚙  Provisioning via bin/worktree-setup…${reset}"
+    if ! ./bin/worktree-setup >&2; then
+        say "${red}✖  bin/worktree-setup failed — finish setup manually${reset}"
+    fi
+else
+    say "${yellow}⚠  No bin/worktree-setup in this repo — skipping provisioning.${reset}"
+    say "${dim}   Add an executable bin/worktree-setup to auto-provision new worktrees.${reset}"
+fi
+
+say "${green}✔  Ready${reset}"
+printf '%s\n' "$worktree_path"
