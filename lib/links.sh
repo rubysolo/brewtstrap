@@ -31,6 +31,9 @@ function setup_links() {
 
   mkdir -p "$HOME/.local/bin"
 
+  info "Linking bin..."
+  ln -sf "$dot_dir/bin/wt" "$HOME/.local/bin/wt"
+
   info "Linking psql..."
   ln -sf "$dot_dir/sql/psqlrc" "$HOME/.psqlrc"
 
