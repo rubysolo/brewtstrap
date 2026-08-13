@@ -15,8 +15,26 @@ function _new_worktree --description 'Shared helper: _new_worktree <type> <name>
         return 1
     end
 
-    set -l worktree_path (wt $argv[1] $argv[2])
-    or return $status
+    # Two calls, not one: create the worktree, cd into it, and only then run the
+    # slow provisioning. Provisioning is minutes of `mix setup` (deps, database,
+    # seeds, a 56 MB asset toolchain) with long silent stretches, and it reads as
+    # a hang often enough that it gets Ctrl-C'd. With one call that Ctrl-C killed
+    # `wt` before it printed the path, so this `cd` never ran and you ended up
+    # back where you started. Now the cd has already happened: an interrupt only
+    # costs the provisioning, and `bin/worktree-setup` is idempotent, so
+    # re-running it in place finishes the job.
+    # `--no-provision` exits 3 when the worktree already existed — switching to
+    # one you already have must not re-run the hook.
+    set -l worktree_path (wt --no-provision $argv[1] $argv[2])
+    set -l create_status $status
+    if test $create_status -ne 0 -a $create_status -ne 3
+        return $create_status
+    end
 
     cd $worktree_path
+    or return $status
+
+    if test $create_status -eq 0
+        wt --provision-only $argv[1] $argv[2] >/dev/null
+    end
 end
