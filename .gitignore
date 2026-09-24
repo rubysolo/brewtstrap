@@ -1,3 +1,23 @@
 fish_variables
 work.fish
 tmp
+
+# ~/.config is a symlink to dotfiles/config, so every app's state lands in
+# this (public) repo — including live credentials (gh, gcloud, anthropic).
+# Track by allowlist: ignore everything, then re-include managed directories.
+/dotfiles/config/*
+!/dotfiles/config/curl/
+!/dotfiles/config/fish/
+!/dotfiles/config/git/
+!/dotfiles/config/iterm2/
+!/dotfiles/config/kitty/
+!/dotfiles/config/mise/
+!/dotfiles/config/nvim/
+
+# Machine-local fish config: config.fish sources env.d/*.fish, so installer
+# PATH lines and secrets belong there, never in a tracked file.
+/dotfiles/config/fish/env.d/
+# Generated completions — regenerate with `<tool> completion fish`.
+/dotfiles/config/fish/completions/copilot.fish
+
+*.bak

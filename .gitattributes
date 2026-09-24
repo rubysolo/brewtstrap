@@ -1,0 +1,19 @@
+# Tracked but machine-maintained: `git diff` / `git log -p` show a one-line
+# "Binary files differ" instead of the churn. Use `git diff --text` to see it.
+
+# Lockfile rewritten by :Lazy update.
+dotfiles/config/nvim/lazy-lock.json -diff
+
+# Vendored by fisher from fish_plugins (tide, fisher); `fisher update`
+# rewrites them wholesale.
+dotfiles/config/fish/functions/fisher.fish         -diff
+dotfiles/config/fish/completions/fisher.fish       -diff
+dotfiles/config/fish/functions/tide.fish           -diff
+dotfiles/config/fish/functions/tide/**             -diff
+dotfiles/config/fish/functions/_tide_*             -diff
+dotfiles/config/fish/functions/fish_prompt.fish    -diff
+dotfiles/config/fish/functions/fish_mode_prompt.fish -diff
+dotfiles/config/fish/completions/tide.fish         -diff
+dotfiles/config/fish/conf.d/_tide_init.fish        -diff
+# …except custom tide items, which are ours (later lines win).
+dotfiles/config/fish/functions/_tide_item_skrt.fish diff
