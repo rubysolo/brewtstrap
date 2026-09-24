@@ -73,5 +73,16 @@
   "workbench.colorTheme": "Cobalt2",
   "gitlens.ai.model": "vscode",
   "gitlens.ai.vscode.model": "copilot:gpt-4o-mini",
-  "chat.mcp.gallery.enabled": true
+  "chat.mcp.gallery.enabled": true,
+  "chat.tools.terminal.autoApprove": {
+    "cargo build": true,
+    "cargo test": true,
+    "cargo clippy": true,
+    "/^mix test$/": {
+      "approve": true,
+      "matchCommandLine": true
+    }
+  },
+  "editor.fontSize": 13,
+  "go.toolsManagement.autoUpdate": true
 }
