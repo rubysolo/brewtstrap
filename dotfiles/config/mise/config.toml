@@ -3,9 +3,11 @@ legacy_version_file = true
 
 [tools]
 elixir = "latest"
-erlang = "latest"
+erlang = "29"
 go = "latest"
 node = "latest"
-python = "latest"
+python = "3.13.13"
 ruby = "latest"
 rust = "latest"
+terraform = "1.9.5"
+terragrunt = "1.0.4"
