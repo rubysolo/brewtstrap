@@ -86,8 +86,8 @@ function cleanup_merged_worktrees --description 'Report local branches/worktrees
             end
             set forge_rows (
                 gh pr list --state all --author @me --limit 500 \
-                    --json number,state,headRefName,headRefOid \
-                    --jq '.[] | [.headRefName, (.state | ascii_downcase), .number, .headRefOid] | @tsv'
+                    --json number,state,headRefName,headRefOid,url \
+                    --jq '.[] | [.headRefName, (.state | ascii_downcase), .number, .headRefOid, .url] | @tsv'
             )
             or echo $yellow"⚠ gh query failed — PR state unavailable"$reset
         case glab
@@ -99,7 +99,7 @@ function cleanup_merged_worktrees --description 'Report local branches/worktrees
             end
             set forge_rows (
                 glab mr list --all --author @me -P 100 -F json \
-                | jq -r '.[] | [.source_branch, (if .state == "opened" then "open" else .state end), .iid, .sha] | @tsv'
+                | jq -r '.[] | [.source_branch, (if .state == "opened" then "open" else .state end), .iid, .sha, .web_url] | @tsv'
             )
             or echo $yellow"⚠ glab query failed — MR state unavailable"$reset
     end
@@ -108,6 +108,7 @@ function cleanup_merged_worktrees --description 'Report local branches/worktrees
     set -l pr_state
     set -l pr_num
     set -l pr_oid
+    set -l pr_url
     for row in $forge_rows
         set -l f (string split \t -- $row)
         test (count $f) -ge 3; or continue
@@ -117,10 +118,12 @@ function cleanup_merged_worktrees --description 'Report local branches/worktrees
             set -a pr_state $f[2]
             set -a pr_num $f[3]
             set -a pr_oid "$f[4]"
+            set -a pr_url "$f[5]"
         else if test "$f[2]" = open; and test "$pr_state[$i]" != open
             set pr_state[$i] $f[2]
             set pr_num[$i] $f[3]
             set pr_oid[$i] "$f[4]"
+            set pr_url[$i] "$f[5]"
         end
     end
 
@@ -173,15 +176,18 @@ function cleanup_merged_worktrees --description 'Report local branches/worktrees
     set -l kinds
     set -l labels
     set -l notes
+    set -l urls
     for b in $branches
         set -l kind none
         set -l label "no PR"
         set -l note ''
+        set -l url ''
         set -l i (contains -i -- $b $pr_branch)
 
         if test -n "$i"
             set kind $pr_state[$i]
             set label "$pr_state[$i] #$pr_num[$i]"
+            set url "$pr_url[$i]"
             # Anything other than open/merged (closed, GitLab's locked) is
             # reported but never cleaned on the forge's say-so.
             contains -- $kind open merged; or set kind closed
@@ -238,6 +244,7 @@ function cleanup_merged_worktrees --description 'Report local branches/worktrees
         set -a kinds $kind
         set -a labels $label
         set -a notes "$note"
+        set -a urls "$url"
     end
 
     set -l w_branch 0
@@ -389,7 +396,18 @@ function cleanup_merged_worktrees --description 'Report local branches/worktrees
                     set detail (string join ' · ' -- $bits)
             end
 
-            echo "  "$color$icon$reset" "$bold(string pad -r -w $w_branch -- $b)$reset"  "$color(string pad -r -w $w_label -- $labels[$idx])$reset"  "$dim$detail$reset
+            # Pad the plain label first, then turn its "#N" into an OSC 8
+            # hyperlink (⌘-click in Ghostty/iTerm) — the escapes are
+            # zero-width, so padding them would misalign the columns. Only
+            # on a terminal, so piped output stays plain text.
+            set -l label (string pad -r -w $w_label -- $labels[$idx])
+            if test -n "$urls[$idx]"; and isatty stdout
+                set -l num (string match -r '#\d+' -- $labels[$idx])
+                set -l around (string split -m 1 -- $num $label)
+                set label $around[1](printf '\e]8;;%s\e\\\\%s\e]8;;\e\\\\' $urls[$idx] $num)$around[2]
+            end
+
+            echo "  "$color$icon$reset" "$bold(string pad -r -w $w_branch -- $b)$reset"  "$color$label$reset"  "$dim$detail$reset
         end
     end
 
