@@ -311,23 +311,28 @@ function cleanup_merged_worktrees --description 'Report local branches/worktrees
                     else
                         set -l ok 1
                         set -l ran_hook 0
+                        set -l hook_failed 0
                         for wt in $wts
                             # Let the project reclaim its own per-worktree
-                            # resources (databases, ports, volumes, …) while
-                            # the worktree still exists. Best-effort — a
-                            # failing hook is reported but never blocks removal.
+                            # resources (databases, ports, reservations, …)
+                            # while the worktree still exists. A failing hook
+                            # keeps the worktree (and so the branch): its
+                            # cleanup did not finish, and a rerun needs the
+                            # checkout and its env file to resume.
                             if test -x $wt/bin/worktree-teardown
                                 set ran_hook 1
                                 set teardown_hooks (math $teardown_hooks + 1)
                                 if test $dry_run -eq 0
                                     pushd $wt
                                     if not ./bin/worktree-teardown
-                                        echo $red"✖ teardown hook failed: $wt"$reset >&2
-                                        set failures (math $failures + 1)
+                                        echo $red"✖ teardown hook failed, keeping worktree: $wt"$reset >&2
+                                        set hook_failed 1
+                                        set ok 0
                                     end
                                     popd
                                 end
                             end
+                            test $hook_failed -eq 1; and continue
                             if test $dry_run -eq 0; and not git worktree remove --force "$wt"
                                 set ok 0
                             end
@@ -343,6 +348,7 @@ function cleanup_merged_worktrees --description 'Report local branches/worktrees
                             set icon ✖
                             set color $red
                             set detail "failed to remove $what"
+                            test $hook_failed -eq 1; and set detail "kept: teardown hook failed — fix and rerun"
                             set failures (math $failures + 1)
                         else
                             set icon ✔
