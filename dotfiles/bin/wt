@@ -151,14 +151,37 @@ if [ -n "$remote_name" ]; then
 fi
 base_branch=${base_branch:-main}
 
+# git against the remote, bounded. On a weak network (tethered to a phone) an
+# SSH connect or a stalled transfer can wait for minutes, and with its output
+# discarded that looks like wt hanging. Keeps any ssh command already set
+# (GIT_SSH_COMMAND, core.sshCommand) and adds the limits to it.
+remote_git() {
+    local ssh
+    ssh=${GIT_SSH_COMMAND:-$(git config core.sshCommand 2>/dev/null || echo ssh)}
+    GIT_SSH_COMMAND="$ssh -o ConnectTimeout=5 -o ServerAliveInterval=5 -o ServerAliveCountMax=2" \
+        GIT_HTTP_LOW_SPEED_LIMIT=1000 GIT_HTTP_LOW_SPEED_TIME=10 \
+        git "$@"
+}
+
+# ls-remote --exit-code: 0 found, 2 not there; anything else, the remote
+# couldn't be asked.
+remote_status=2
+if [ -n "$remote_name" ] && ! git show-ref --verify --quiet "refs/heads/$branch_name"; then
+    remote_git ls-remote --exit-code --heads "$remote_name" "$branch_name" >/dev/null 2>&1 &&
+        remote_status=0 || remote_status=$?
+fi
+
 if git show-ref --verify --quiet "refs/heads/$branch_name"; then
     git worktree add "$worktree_path" "$branch_name" >&2
-elif [ -n "$remote_name" ] &&
-    git ls-remote --exit-code --heads "$remote_name" "$branch_name" >/dev/null 2>&1; then
+elif [ "$remote_status" -eq 0 ]; then
     # Ensure the remote-tracking ref exists locally before creating the worktree.
-    git fetch --no-tags "$remote_name" "$branch_name" >/dev/null 2>&1
+    remote_git fetch --no-tags "$remote_name" "$branch_name" >/dev/null 2>&1
     git worktree add --track -b "$branch_name" "$worktree_path" "$remote_name/$branch_name" >&2
 else
+    if [ "$remote_status" -ne 2 ]; then
+        say "${yellow}⚠  Couldn't reach ${remote_name} to look for ${branch_name}; branching from ${base_branch}.${reset}"
+        say "${dim}   If it already exists there, reconcile before pushing.${reset}"
+    fi
     git worktree add -b "$branch_name" "$worktree_path" "$base_branch" >&2
 fi
 
